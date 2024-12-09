@@ -7,13 +7,9 @@
     <title>ABH-Schädlingsbekämpfung - Einzugsgebiet-Checker</title>
     <style>
         /* Base styles for desktop */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            font-size: 22px;
-            background-color: #f2f2f2;
+        .search-hb{
+            text-align: center;
         }
-
         .result {
             margin-top: 20px;
             padding: 15px;
@@ -22,6 +18,7 @@
             background-color: #ffffff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: none; 
+            text-align: center;
         }
 
         .result h3 {
@@ -103,7 +100,7 @@
 
 <body>
 
-    <div>
+    <div class="search-hb">
         <input type="text" id="searchInput" placeholder="Postleitzahl oder Stadt" />
         <button onclick="handleSearch()">Suchen</button>
     </div>
