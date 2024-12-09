@@ -55,27 +55,27 @@
             border-radius: 5px;
         }
 
-        button {
-            padding: 10px 20px;
+        .hb-button {
+            padding: 10px 40px!important;
             background-color: #1839DE;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 22px;
+            font-size: 22px !important;
             border-radius: 50px;
         }
 
-        button:hover {
+        .hb-button:hover {
             background-color: #132EB2;
         }
 
         /* Mobile styles */
         @media (max-width: 768px) {
 
-            body,
             input[type="text"],
-            button {
+            .hb-button {
                 font-size: 18px;
+                margin-top: 20px;
             }
 
             .result {
@@ -102,7 +102,7 @@
 
     <div class="search-hb">
         <input type="text" id="searchInput" placeholder="Postleitzahl oder Stadt" />
-        <button onclick="handleSearch()">Suchen</button>
+        <button class="hb-button" onclick="handleSearch()">Suchen</button>
     </div>
 
     <div id="result" class="result"></div>
@@ -285,7 +285,7 @@
                         <p>Orte: ${locationData[searchTerm].join(", ")}</p>
                         <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
                         <p>Mehr Informationen zur Schädlingsbekämpfung in diesem Gebiet.</p>
-                        <button onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schadlingsbekampfer beauftragen</button>
+                        <button class="hb-button" onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schadlingsbekampfer beauftragen</button>
                     </div>`;
                 } else {
                     resultHTML = "<p>Keine Ergebnisse für diese Postleitzahl gefunden.</p>";
