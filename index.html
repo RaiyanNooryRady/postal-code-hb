@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABH-Schädlingsbekämpfung - Einzugsgebiet-Checker</title>
+    <style>
+        /* Base styles for desktop */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            font-size: 22px;
+            background-color: #f2f2f2;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none; 
+        }
+
+        .result h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .result p {
+            margin: 10px 0;
+            font-size: 22px;
+        }
+
+        .result button {
+            padding: 10px 20px;
+            background-color: #1839DE;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .result button:hover {
+            background-color: #132EB2;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            margin-right: 10px;
+            font-size: 22px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #1839DE;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            border-radius: 50px;
+        }
+
+        button:hover {
+            background-color: #132EB2;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+
+            body,
+            input[type="text"],
+            button {
+                font-size: 18px;
+            }
+
+            .result {
+                padding: 12px;
+            }
+
+            .result h3 {
+                font-size: 18px;
+            }
+
+            .result p {
+                font-size: 18px;
+            }
+
+            .result button {
+                padding: 8px 16px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <input type="text" id="searchInput" placeholder="Postleitzahl oder Stadt" />
+        <button onclick="handleSearch()">Suchen</button>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <script>
+        const locationData = {
+            "61130": ["Nidderau", "Nidderau-Windecken", "Nidderau-Ostheim", "Nidderau-Erbstadt", "Nidderau-Eichen"],
+            "61137": ["Schöneck", "Schöneck-Büdesheim", "Schöneck-Kilianstädten", "Schöneck-Oberdorfelden"],
+            "61138": ["Niederdorfelden"],
+            "61169": ["Bad Vilbel"],
+            "61184": ["Karben", "Karben-Kloppenheim", "Karben-Okarben", "Karben-Rendel", "Karben-Klein-Karben", "Karben-Groß-Karben", "Karben-Petterweil"],
+            "61191": ["Rosbach v.d. Höhe", "Rosbach-Rodheim", "Rosbach-Nieder-Rosbach"],
+            "61194": ["Niddatal", "Niddatal-Assenheim", "Niddatal-Bönstadt", "Niddatal-Ilbenstadt", "Niddatal-Kaichen"],
+            "61197": ["Florstadt", "Florstadt-Nieder-Florstadt", "Florstadt-Ober-Florstadt", "Florstadt-Staden"],
+            "61200": ["Wölfersheim", "Wölfersheim-Melbach", "Wölfersheim-Södel", "Wölfersheim-Wohnbach"],
+            "61203": ["Reichelsheim"],
+            "61206": ["Wöllstadt", "Wöllstadt-Nieder-Wöllstadt", "Wöllstadt-Ober-Wöllstadt"],
+            "61209": ["Echzell"],
+            "61231": ["Bad Nauheim"],
+            "61239": ["Ober-Mörlen", "Ober-Mörlen-Langenhain"],
+            "63452": ["Hanau-Wolfgang"],
+            "63454": ["Hanau-Steinheim"],
+            "63456": ["Hanau-Klein-Auheim"],
+            "63457": ["Hanau-Großauheim"],
+            "63477": ["Maintal", "Maintal-Bischofsheim", "Maintal-Dörnigheim", "Maintal-Hochstadt", "Maintal-Wachenbuchen"],
+            "63486": ["Bruchköbel", "Bruchköbel-Roßdorf", "Bruchköbel-Butterstadt"],
+            "63500": ["Seligenstadt", "Seligenstadt-Klein-Welzheim"],
+            "63505": ["Langenselbold"],
+            "63512": ["Hainburg", "Hainburg-Klein-Krotzenburg", "Hainburg-Hainstadt"],
+            "63517": ["Rodenbach", "Rodenbach-Niederrodenbach", "Rodenbach-Oberrodenbach"],
+            "63526": ["Erlensee", "Erlensee-Langendiebach", "Erlensee-Rückingen"],
+            "63533": ["Mainhausen", "Mainhausen-Mainflingen", "Mainhausen-Zellhausen"],
+            "63538": ["Großkrotzenburg"],
+            "63543": ["Neuberg", "Neuberg-Ravolzhausen", "Neuberg-Rüdigheim"],
+            "63546": ["Hammersbach", "Hammersbach-Marköbel", "Hammersbach-Langen-Bergheim"],
+            "63549": ["Ronneburg"],
+            "63571": ["Gelnhausen"],
+            "63579": ["Freigericht"],
+            "63584": ["Gründau"],
+            "63589": ["Linsengericht"],
+            "63594": ["Hasselroth"],
+            "63599": ["Biebergemünd"],
+            "63607": ["Wächtersbach"],
+            "63619": ["Bad Orb"],
+            "63633": ["Birstein"],
+            "63637": ["Jossgrund"],
+            "63654": ["Büdingen"],
+            "63065": ["Offenbach am Main", "Offenbach-Zentrum", "Offenbach-Bürgel", "Offenbach-Bieber", "Offenbach-Rumpenheim", "Offenbach-Waldheim"],
+            "63110": ["Rodgau", "Rodgau-Weiskirchen", "Rodgau-Hainhausen", "Rodgau-Jügesheim", "Rodgau-Dudenhofen", "Rodgau-Nieder-Roden"],
+            "63128": ["Dietzenbach"],
+            "63150": ["Heusenstamm"],
+            "63165": ["Mühlheim am Main"],
+            "63179": ["Obertshausen", "Obertshausen-Hausen"],
+            "63225": ["Langen"],
+            "63263": ["Neu-Isenburg"],
+            "63303": ["Dreieich", "Dreieich-Sprendlingen", "Dreieich-Dreieichenhain", "Dreieich-Götzenhain", "Dreieich-Offenthal", "Dreieich-Buchschlag"],
+            "63322": ["Rödermark", "Rödermark-Urberach", "Rödermark-Ober-Roden"],
+            "63329": ["Egelsbach"],
+            "64283": ["Darmstadt-Mitte", "Darmstadt-Nord", "Darmstadt-Ost", "Darmstadt-West", "Darmstadt-Arheilgen", "Darmstadt-Bessungen", "Darmstadt-Eberstadt", "Darmstadt-Kranichstein"],
+            "64331": ["Weiterstadt", "Weiterstadt-Gräfenhausen", "Weiterstadt-Schneppenhausen"],
+            "64342": ["Seeheim-Jugenheim"],
+            "64347": ["Griesheim"],
+            "64354": ["Reinheim"],
+            "64367": ["Mühltal"],
+            "64372": ["Ober-Ramstadt"],
+            "64380": ["Roßdorf"],
+            "64390": ["Erzhausen"],
+            "64397": ["Modautal"],
+            "64401": ["Groß-Bieberau"],
+            "64404": ["Bickenbach"],
+            "64405": ["Fischbachtal"],
+            "64407": ["Fränkisch-Crumbach"],
+            "64409": ["Messel"],
+            "64521": ["Groß-Gerau"],
+            "64546": ["Mörfelden-Walldorf"],
+            "64560": ["Riedstadt"],
+            "64569": ["Nauheim"],
+            "64572": ["Büttelborn", "Klein-Gerau", "Worfelden"],
+            "64579": ["Gernsheim"],
+            "64584": ["Biebesheim"],
+            "64589": ["Stockstadt am Rhein"],
+            "64625": ["Bensheim"],
+            "64665": ["Alsbach-Hähnlein"],
+            "64673": ["Zwingenberg"],
+            "64683": ["Einhausen"],
+            "64686": ["Lautertal"],
+            "65428": ["Rüsselsheim", "Rüsselsheim-Bauschheim", "Rüsselsheim-Königstädten", "Rüsselsheim-Haßloch"],
+            "65451": ["Kelsterbach"],
+            "65462": ["Ginsheim-Gustavsburg", "Ginsheim", "Gustavsburg"],
+            "65468": ["Trebur", "Trebur-Astheim", "Trebur-Geinsheim"],
+            "65474": ["Bischofsheim"],
+            "65479": ["Raunheim"],
+            "55116": ["Mainz-Altstadt", "Mainz-Neustadt", "Mainz-Mombach", "Mainz-Gonsenheim", "Mainz-Drais", "Mainz-Finthen", "Mainz-Marienborn", "Mainz-Bretzenheim", "Mainz-Hechtsheim", "Mainz-Weisenau", "Mainz-Laubenheim"],
+            "55218": ["Ingelheim am Rhein"],
+            "55232": ["Alzey"],
+            "55239": ["Gau-Odernheim"],
+            "55246": ["Mainz-Kostheim"],
+            "55252": ["Mainz-Kastel"],
+            "55257": ["Budenheim"],
+            "55262": ["Heidesheim am Rhein"],
+            "55268": ["Nieder-Olm"],
+            "55270": ["Schwabenheim"],
+            "55271": ["Stadecken-Elsheim"],
+            "55276": ["Oppenheim"],
+            "55278": ["Mommenheim"],
+            "55286": ["Wörrstadt"],
+            "55288": ["Armsheim"],
+            "55291": ["Saulheim"],
+            "55294": ["Bodenheim"],
+            "55296": ["Gau-Bischofsheim"],
+            "55299": ["Nackenheim"],
+            "65183": ["Wiesbaden-Mitte", "Wiesbaden-Süd", "Wiesbaden-Ost", "Wiesbaden-Nord", "Wiesbaden-West", "Wiesbaden-Biebrich", "Wiesbaden-Dotzheim", "Wiesbaden-Sonnenberg", "Wiesbaden-Schierstein"],
+            "65201": ["Wiesbaden-Frauenstein"],
+            "65203": ["Wiesbaden-Bierstadt"],
+            "65205": ["Wiesbaden-Nordenstadt"],
+            "65207": ["Wiesbaden-Breckenheim"],
+            "65232": ["Taunusstein", "Taunusstein-Wehen", "Taunusstein-Neuhof", "Taunusstein-Hahn"],
+            "65239": ["Hochheim am Main"],
+            "65307": ["Bad Schwalbach"],
+            "65321": ["Heidenrod"],
+            "65326": ["Aarbergen"],
+            "65329": ["Hohenstein"],
+            "65343": ["Eltville am Rhein"],
+            "65345": ["Rauenthal"],
+            "65346": ["Eltville-Erbach"],
+            "65347": ["Eltville-Hattenheim"],
+            "65366": ["Geisenheim"],
+            "65375": ["Oestrich-Winkel"],
+            "65385": ["Rüdesheim am Rhein"],
+            "65388": ["Schlangenbad"],
+            "65391": ["Lorch"],
+            "65396": ["Walluf"],
+            "65399": ["Kiedrich"],
+            "65510": ["Idstein", "Idstein-Wörsdorf"],
+            "65527": ["Niedernhausen", "Niedernhausen-Oberjosbach", "Niedernhausen-Niederseelbach"],
+            "65529": ["Waldems"],
+            "65719": ["Hofheim am Taunus", "Hofheim-Marxheim", "Hofheim-Diedenbergen", "Hofheim-Wallau", "Hofheim-Langenhain", "Hofheim-Wildsachsen"],
+            "65760": ["Eschborn", "Eschborn-Niederhöchstadt"],
+            "65779": ["Kelkheim", "Kelkheim-Fischbach", "Kelkheim-Ruppertshain"],
+            "65795": ["Hattersheim am Main", "Hattersheim-Eddersheim", "Hattersheim-Okriftel"],
+            "65812": ["Bad Soden am Taunus", "Bad Soden-Neuenhain"],
+            "65824": ["Schwalbach am Taunus"],
+            "65830": ["Kriftel"],
+            "65835": ["Liederbach am Taunus", "Liederbach-Oberliederbach", "Liederbach-Niederliederbach"],
+            "65843": ["Sulzbach (Taunus)"],
+            "60549": ["Frankfurt Flughafen"],
+            "63263": ["Neu-Isenburg Industriepark"],
+            "63477": ["Maintal Dörnigheim Industriepark"],
+            "65428": ["Rüsselsheim Opel-Werk"],
+            "65451": ["Kelsterbach Industriegebiet Süd"],
+            "65479": ["Raunheim Mönchhof"],
+            "65719": ["Hofheim-Wallau Industriepark"],
+            "65795": ["Hattersheim Industriegebiet"]
+        };
+
+        const cityToPostal = {};
+        Object.entries(locationData).forEach(([postal, cities]) => {
+            cities.forEach(city => {
+                cityToPostal[city.toLowerCase()] = postal;
+            });
+        });
+
+        function handleSearch() {
+            const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+            const resultDiv = document.getElementById("result");
+
+            if (!searchTerm) {
+                resultDiv.innerHTML = "";
+                return;
+            }
+
+            let resultHTML = "";
+
+            // Check if input is a postal code
+            if (/^\d{5}$/.test(searchTerm)) {
+                resultDiv.style.display="block";
+                if (locationData[searchTerm]) {
+                    resultHTML = `<div>
+                        <h3>Ergebnisse für Postleitzahl ${searchTerm}:</h3>
+                        <p>Orte: ${locationData[searchTerm].join(", ")}</p>
+                        <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
+                        <p>Mehr Informationen zur Schädlingsbekämpfung in diesem Gebiet.</p>
+                        <button onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schadlingsbekampfer beauftragen</button>
+                    </div>`;
+                } else {
+                    resultHTML = "<p>Keine Ergebnisse für diese Postleitzahl gefunden.</p>";
+                }
+                
+            } else if (cityToPostal[searchTerm]) {
+                resultDiv.style.display="block";
+                const postalCode = cityToPostal[searchTerm];
+                resultHTML = `<div>
+                    <h3>Ergebnisse für Stadt ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3>
+                    <p>Postleitzahl: ${postalCode}</p>
+                    <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
+                    <p>Mehr Informationen zur Schädlingsbekämpfung in diesem Gebiet.</p>
+                    <button onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schädlingsbekämpfer beauftragen</button>
+                </div>`;
+            } else {
+                resultHTML = "<p>Keine Ergebnisse für diese Stadt oder Postleitzahl gefunden.</p>";
+            }
+
+            resultDiv.innerHTML = resultHTML;
+        }
+    </script>
+
+</body>
+
+</html>
