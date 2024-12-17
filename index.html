@@ -7,9 +7,10 @@
     <title>ABH-Schädlingsbekämpfung - Einzugsgebiet-Checker</title>
     <style>
         /* Base styles for desktop */
-        .search-hb{
+        .search-hb {
             text-align: center;
         }
+
         .result {
             margin-top: 20px;
             padding: 15px;
@@ -17,7 +18,7 @@
             border-radius: 8px;
             background-color: #ffffff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: none; 
+            display: none;
             text-align: center;
         }
 
@@ -56,7 +57,7 @@
         }
 
         .hb-button {
-            padding: 10px 40px!important;
+            padding: 10px 40px !important;
             background-color: #1839DE;
             color: white;
             border: none;
@@ -276,29 +277,27 @@
 
             let resultHTML = "";
 
-            // Check if input is a postal code
+            // Check if input is a postal code    <p>Mehr Informationen zur Schädlingsbekämpfung in diesem Gebiet.</p>
             if (/^\d{5}$/.test(searchTerm)) {
-                resultDiv.style.display="block";
+                resultDiv.style.display = "block";
                 if (locationData[searchTerm]) {
                     resultHTML = `<div>
                         <h3>Ergebnisse für Postleitzahl ${searchTerm}:</h3>
                         <p>Orte: ${locationData[searchTerm].join(", ")}</p>
                         <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
-                        <p>Mehr Informationen zur Schädlingsbekämpfung in diesem Gebiet.</p>
                         <button class="hb-button" onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schadlingsbekampfer beauftragen</button>
                     </div>`;
                 } else {
                     resultHTML = "<p>Keine Ergebnisse für diese Postleitzahl gefunden.</p>";
                 }
-                
+
             } else if (cityToPostal[searchTerm]) {
-                resultDiv.style.display="block";
+                resultDiv.style.display = "block";
                 const postalCode = cityToPostal[searchTerm];
                 resultHTML = `<div>
                     <h3>Ergebnisse für Stadt ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3>
                     <p>Postleitzahl: ${postalCode}</p>
                     <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
-                    <p>Mehr Informationen zur Schädlingsbekämpfung in diesem Gebiet.</p>
                     <button onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schädlingsbekämpfer beauftragen</button>
                 </div>`;
             } else {
