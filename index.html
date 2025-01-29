@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABH-Schädlingsbekämpfung- Einzugsgebiet-Checker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         /* Base styles for desktop */
         .search-hb {
@@ -107,7 +109,7 @@
     </div>
 
     <div id="result" class="result"></div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const locationData = {
             "61130": ["Nidderau", "Nidderau-Windecken", "Nidderau-Ostheim", "Nidderau-Erbstadt", "Nidderau-Eichen"],
@@ -366,7 +368,7 @@
             "65817": ["Eppstein"],
             "65824": ["Schwalbach-Limesstadt"],
             "65843": ["Sulzbach"],
-            "00000": ["Frankfurt am Main", "Hanau","Mainz","Wiesbaden","Darmstadt"],
+            "00000": ["Frankfurt am Main", "Hanau", "Mainz", "Wiesbaden", "Darmstadt"],
         };
 
         const cityToPostal = {};
@@ -392,10 +394,11 @@
                 resultDiv.style.display = "block";
                 if (locationData[searchTerm]) {
                     resultHTML = `<div>
-                        <h3>Ergebnisse für Postleitzahl ${searchTerm}:</h3>
+                        <h3 class="mt-3">Ergebnisse für Postleitzahl ${searchTerm}:</h3>
                         <p>Orte: ${locationData[searchTerm].join(", ")}</p>
                         <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
-                        <button class="hb-button" onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schadlingsbekampfer beauftragen</button>
+                        <p class="bi bi-check2 text-success bg-success bg-opacity-25 d-inline-block py-2 px-3 rounded-pill"> Keine zusätzlichen Anfahrtskosten </p><br>
+                        <button class="hb-button my-3" onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schadlingsbekampfer beauftragen</button>
                     </div>`;
                 } else {
                     resultHTML = "<p>Keine Ergebnisse für diese Postleitzahl gefunden.</p>";
@@ -405,9 +408,10 @@
                 resultDiv.style.display = "block";
                 const postalCode = cityToPostal[searchTerm];
                 resultHTML = `<div>
-                    <h3>Ergebnisse für Stadt ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3>
+                    <h3 class="mt-3">Ergebnisse für Stadt ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3>
                     <p>Postleitzahl: ${postalCode}</p>
                     <p>Durchschnittliche Reaktionszeit: 30-60 Minuten.</p>
+                    <p class="bi bi-check2 text-success bg-success bg-opacity-25 d-inline-block py-2 px-3 rounded-pill"> Keine zusätzlichen Anfahrtskosten </p><br>
                     <button onclick="window.location.href='https://hansbasel.techhunter2024.online/kontakt/'">Jetzt Schädlingsbekämpfer beauftragen</button>
                 </div>`;
             } else {
